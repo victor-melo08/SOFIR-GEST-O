@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>One Page Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ══════════ UPLOAD ══════════ -->
+<div id="upload-screen">
+  <div class="up-noise"></div>
+
+  <div class="up-sidebar">
+    <div class="up-logo">
+      <span class="logo-sq"></span>
+      <span>ONE PAGE<br><strong>REPORT</strong></span>
+    </div>
+    <div class="up-tagline">Transforme sua<br>planilha em<br>relatório.</div>
+    <div class="up-version">v2.0 · Sofir do Brasil</div>
+  </div>
+
+  <div class="up-main">
+    <div class="up-card">
+      <p class="up-eyebrow">IMPORTAR DADOS</p>
+      <h2>Selecione a planilha do projeto</h2>
+      <p class="up-sub">O relatório será gerado automaticamente a partir da primeira aba da planilha.</p>
+
+      <div class="dropzone" id="drop-zone">
+        <input type="file" id="file-input" accept=".xlsx,.xls,.xlsm" hidden/>
+        <div class="dz-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <p class="dz-title">Arraste o arquivo aqui</p>
+        <p class="dz-hint">ou <u>clique para selecionar</u></p>
+        <p class="dz-fmt">.xlsx · .xlsm · .xls</p>
+      </div>
+
+      <div id="upload-error" class="up-error hidden">
+        Arquivo inválido. Use uma planilha Excel.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ RELATÓRIO ══════════ -->
+<div id="report-screen" class="hidden">
+
+  <!-- FAIXA TOPO -->
+  <div class="top-stripe">
+    <div class="ts-left">
+      <span class="logo-sq sm"></span>
+      <span class="ts-brand">ONE PAGE REPORT <span class="ts-sep">·</span> SOFIR DO BRASIL</span>
+    </div>
+    <div class="ts-center">
+      <span id="h-projeto" class="ts-projeto">—</span>
+    </div>
+    <div class="ts-right">
+      <div class="ts-meta"><span class="ts-lbl">Responsável</span><span id="h-responsavel">—</span></div>
+      <div class="ts-meta"><span class="ts-lbl">Setor</span><span id="h-setor">—</span></div>
+      <div class="ts-meta">
+        <div id="ts-clock" class="ts-clock">00:00:00</div>
+        <div id="ts-clock-date" class="ts-clock-date">—</div>
+      </div>
+      <button class="btn-reset" onclick="resetApp()">↩ Nova</button>
+    </div>
+  </div>
+
+  <!-- GRID PRINCIPAL -->
+  <div class="rpt-grid">
+
+    <!-- ── COL ESQUERDA: sidebar escura ── -->
+    <aside class="col-aside">
+
+      <!-- Status badge grande -->
+      <div class="aside-hero">
+        <div class="ah-label">STATUS DO PROJETO</div>
+        <div id="a-spi-big" class="ah-status">—</div>
+        <div id="a-cpi-big" class="ah-status-sub">—</div>
+      </div>
+
+      <!-- Métricas rápidas empilhadas -->
+      <div class="aside-metrics">
+
+        <div class="am-item">
+          <div class="am-label">FATURAMENTO</div>
+          <div id="a-fat" class="am-val">—</div>
+          <div id="a-fat-note" class="am-note">—</div>
+        </div>
+
+        <div class="am-item">
+          <div class="am-label">NÃO CONFORMIDADES</div>
+          <div id="a-nc" class="am-val am-red">—</div>
+        </div>
+
+        <div class="am-item">
+          <div class="am-label">PRAZO RESTANTE</div>
+          <div id="a-prazo" class="am-val am-orange">—</div>
+        </div>
+
+        <div class="am-item">
+          <div class="am-label">DESENHOS / DIA</div>
+          <div id="a-ddia" class="am-val">—</div>
+        </div>
+
+      </div>
+
+      <!-- Eficiências -->
+      <div class="aside-efic">
+        <div class="ae-row">
+          <div class="ae-label">Eficiência Ponderada</div>
+          <div id="a-efic" class="ae-val">—</div>
+        </div>
+        <div class="ae-bar-track"><div id="bar-efic" class="ae-bar-fill"></div></div>
+
+        <div class="ae-row" style="margin-top:16px">
+          <div class="ae-label">Efic. por Complexidade</div>
+          <div id="a-efic-cx" class="ae-val">—</div>
+        </div>
+        <div class="ae-bar-track"><div id="bar-efic-cx" class="ae-bar-fill ae-orange"></div></div>
+
+        <div class="ae-row" style="margin-top:16px">
+          <div class="ae-label">Índice de Retrabalho</div>
+          <div id="a-ret-cx" class="ae-val">—</div>
+        </div>
+        <div class="ae-bar-track"><div id="bar-ret-cx" class="ae-bar-fill ae-red"></div></div>
+      </div>
+
+    </aside>
+
+    <!-- ── COL CENTRAL ── -->
+    <div class="col-center">
+
+      <!-- Bloco financeiro -->
+      <div class="fin-block">
+        <div class="fin-card">
+          <div class="fc-eyebrow">PROPOSTA</div>
+          <div id="c-proposta" class="fc-val">—</div>
+        </div>
+        <div class="fin-divider">VS</div>
+        <div class="fin-card">
+          <div class="fc-eyebrow">CUSTO REAL</div>
+          <div id="c-custo" class="fc-val fc-orange">—</div>
+        </div>
+        <div class="fin-card fin-saldo">
+          <div class="fc-eyebrow">SALDO</div>
+          <div id="c-saldo" class="fc-val">—</div>
+        </div>
+      </div>
+
+      <!-- Produção: 4 colunas visuais -->
+      <div class="prod-block">
+        <div class="pb-header">
+          <span class="pb-title">PRODUÇÃO</span>
+          <span id="pb-total" class="pb-total">— itens</span>
+        </div>
+
+        <div class="pb-cols">
+
+          <div class="pb-col">
+            <div class="pb-col-top">
+              <div id="p-fin-pct" class="pb-pct" style="color:var(--green)">—</div>
+              <div class="pb-col-label">FINALIZADOS</div>
+            </div>
+            <div class="pb-tower-wrap">
+              <div class="pb-tower-bg">
+                <div id="tower-fin" class="pb-tower" style="background:var(--green)"></div>
+              </div>
+            </div>
+            <div id="p-fin-qtd" class="pb-qtd">—</div>
+          </div>
+
+          <div class="pb-col">
+            <div class="pb-col-top">
+              <div id="p-proc-pct" class="pb-pct" style="color:var(--blue-mid)">—</div>
+              <div class="pb-col-label">EM PROCESSO</div>
+            </div>
+            <div class="pb-tower-wrap">
+              <div class="pb-tower-bg">
+                <div id="tower-proc" class="pb-tower" style="background:var(--blue-mid)"></div>
+              </div>
+            </div>
+            <div id="p-proc-qtd" class="pb-qtd">—</div>
+          </div>
+
+          <div class="pb-col">
+            <div class="pb-col-top">
+              <div id="p-ni-pct" class="pb-pct" style="color:var(--mid)">—</div>
+              <div class="pb-col-label">NÃO FABRIC.</div>
+            </div>
+            <div class="pb-tower-wrap">
+              <div class="pb-tower-bg">
+                <div id="tower-ni" class="pb-tower" style="background:var(--mid)"></div>
+              </div>
+            </div>
+            <div id="p-ni-qtd" class="pb-qtd">—</div>
+          </div>
+
+          <div class="pb-col">
+            <div class="pb-col-top">
+              <div id="p-ret-pct" class="pb-pct" style="color:var(--orange)">—</div>
+              <div class="pb-col-label">RETRABALHO</div>
+            </div>
+            <div class="pb-tower-wrap">
+              <div class="pb-tower-bg">
+                <div id="tower-ret" class="pb-tower" style="background:var(--orange)"></div>
+              </div>
+            </div>
+            <div id="p-ret-qtd" class="pb-qtd">—</div>
+          </div>
+
+        </div>
+
+        <!-- Barra de progresso geral -->
+        <div class="pb-progress-wrap">
+          <div class="pbp-labels">
+            <span>Progresso Geral</span>
+            <span id="pbp-pct">0%</span>
+          </div>
+          <div class="pbp-track">
+            <div id="pbp-fill-fin"  class="pbp-seg" style="background:var(--green)"></div>
+            <div id="pbp-fill-proc" class="pbp-seg" style="background:var(--blue-mid)"></div>
+            <div id="pbp-fill-ni"   class="pbp-seg" style="background:var(--mid)"></div>
+            <div id="pbp-fill-ret"  class="pbp-seg" style="background:var(--orange)"></div>
+          </div>
+          <div class="pbp-legend">
+            <span><i class="dot" style="background:var(--green)"></i>Finalizado</span>
+            <span><i class="dot" style="background:var(--blue-mid)"></i>Processo</span>
+            <span><i class="dot" style="background:var(--mid)"></i>Não Fab.</span>
+            <span><i class="dot" style="background:var(--orange)"></i>Retrabalho</span>
+          </div>
+        </div>
+
+        <!-- Riscos e Ações abaixo do progresso -->
+        <div class="notas-inline">
+          <div class="nota-block risco ni-block">
+            <div class="nb-header">
+              <span class="nb-icon">⚠</span>
+              <span class="nb-title">PRINCIPAIS RISCOS</span>
+            </div>
+            <ul id="lista-riscos" class="nb-list nb-horizontal"></ul>
+          </div>
+          <div class="nota-block acao ni-block">
+            <div class="nb-header">
+              <span class="nb-icon">▶</span>
+              <span class="nb-title">PLANOS DE AÇÃO</span>
+            </div>
+            <ul id="lista-acoes" class="nb-list nb-horizontal"></ul>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ── COL DIREITA ── -->
+    <div class="col-right">
+
+      <!-- Mini painel de índices -->
+      <div class="col-right-indices">
+        <div class="cri-title">ÍNDICES DO PROJETO</div>
+        <div class="cri-item">
+          <span class="cri-label">CPI</span>
+          <span id="cr-cpi" class="cri-val">—</span>
+        </div>
+        <div class="cri-item">
+          <span class="cri-label">SPI</span>
+          <span id="cr-spi" class="cri-val">—</span>
+        </div>
+        <div class="cri-sep"></div>
+        <div class="cri-item">
+          <span class="cri-label">Efic. Complexidade</span>
+          <span id="cr-efcx" class="cri-val">—</span>
+        </div>
+        <div class="cri-item">
+          <span class="cri-label">Retrabalho Cx.</span>
+          <span id="cr-retcx" class="cri-val cri-red">—</span>
+        </div>
+        <div class="cri-sep"></div>
+        <div class="cri-item">
+          <span class="cri-label">NC Registradas</span>
+          <span id="cr-nc" class="cri-val cri-red">—</span>
+        </div>
+        <div class="cri-item">
+          <span class="cri-label">Desenhos/Dia</span>
+          <span id="cr-ddia" class="cri-val">—</span>
+        </div>
+      </div>
+
+      <div class="nota-block conquista">
+        <div class="nb-header">
+          <span class="nb-icon">★</span>
+          <span class="nb-title">CONQUISTAS</span>
+        </div>
+        <ul id="lista-conquistas" class="nb-list"></ul>
+      </div>
+
+      <div class="nota-block reclam">
+        <div class="nb-header">
+          <span class="nb-icon">✉</span>
+          <span class="nb-title">RECLAMAÇÕES</span>
+        </div>
+        <ul id="lista-reclamacoes" class="nb-list"></ul>
+      </div>
+
+    </div>
+
+  </div><!-- /rpt-grid -->
+
+  <div class="rpt-footer">
+    <span>One Page Report · Sofir do Brasil</span>
+    <span id="v-gerado">—</span>
+  </div>
+
+</div><!-- /report-screen -->
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
