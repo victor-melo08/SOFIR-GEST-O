@@ -293,3 +293,4 @@ function resetApp() {
   uploadScreen.classList.remove('hidden');
   if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
 }
+
