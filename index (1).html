@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>One Page Report — Sofir do Brasil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+/* ═══════════════════════════════════════════════════
+   ONE PAGE REPORT v2 — tema editorial
+   Paleta: branco · azul-marinho · laranja · verde
+   Fontes: Bebas Neue · Instrument Sans · JetBrains Mono
+═══════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Paleta principal — inspirada no Executive Summary */
+  --navy:      #0f2044;
+  --navy-dark: #091529;
+  --navy-mid:  #1a3260;
+  --blue-mid:  #2563b0;
+  --sky:       #4a90d9;
+  --orange:    #e8620a;
+  --orange-lt: #f47c35;
+  --green:     #1a9e5c;
+  --green-lt:  #25c472;
+  --red:       #c0392b;
+  --mid:       #7a8fa8;
+  --light:     #d9e4f0;
+  --paper:     #f4f7fb;
+  --white:     #ffffff;
+  --ink:       #0f2044;
+  --ink-mid:   #3d5278;
+  --ink-dim:   #7a8fa8;
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'Instrument Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --r: 8px;
+  --shadow: 0 2px 12px rgba(15,32,68,.10);
+  --shadow-lg: 0 8px 32px rgba(15,32,68,.15);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.hidden { display: none !important; }
+
+/* ══════════════════════════════════════════
+   UPLOAD SCREEN
+══════════════════════════════════════════ */
+#upload-screen {
+  min-height: 100vh;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ruído sutil de fundo */
+.up-noise {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.up-sidebar {
+  width: 320px;
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 40px;
+  position: relative;
+  flex-shrink: 0;
+}
+.up-sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-lt));
+}
+
+.up-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: .8rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.up-logo strong { color: var(--orange); }
+
+.up-tagline {
+  font-family: var(--font-display);
+  font-size: 3.4rem;
+  line-height: 1;
+  color: var(--white);
+  letter-spacing: .02em;
+}
+
+.up-version {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  color: rgba(255,255,255,.35);
+  letter-spacing: .1em;
+}
+
+.up-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.up-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 48px 52px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--light);
+}
+
+.up-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .18em;
+  color: var(--orange);
+  margin-bottom: 12px;
+}
+
+.up-card h2 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  letter-spacing: .03em;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+.up-sub {
+  font-size: .9rem;
+  color: var(--ink-dim);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.dropzone {
+  border: 2px dashed var(--light);
+  border-radius: var(--r);
+  padding: 40px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  background: var(--paper);
+}
+.dropzone:hover, .dropzone.drag {
+  border-color: var(--navy);
+  background: rgba(15,32,68,.03);
+}
+.dz-icon { color: var(--navy); margin-bottom: 14px; }
+.dz-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.dz-hint { font-size: .85rem; color: var(--ink-dim); }
+.dz-hint u { color: var(--blue-mid); cursor: pointer; }
+.dz-fmt {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  color: var(--mid);
+  letter-spacing: .08em;
+}
+
+.up-error {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: #fdf0ef;
+  border: 1px solid #f5c6c3;
+  border-radius: 6px;
+  color: var(--red);
+  font-size: .85rem;
+}
+
+/* ══════════════════════════════════════════
+   LOGO SQUARE
+══════════════════════════════════════════ */
+.logo-sq {
+  display: inline-block;
+  width: 36px; height: 36px;
+  background: var(--orange);
+  border-radius: 4px;
+  position: relative;
+  flex-shrink: 0;
+}
+.logo-sq::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 2px solid rgba(255,255,255,.5);
+  border-radius: 2px;
+}
+.logo-sq.sm { width: 24px; height: 24px; }
+.logo-sq.sm::after { inset: 4px; }
+
+/* ══════════════════════════════════════════
+   RELATÓRIO
+══════════════════════════════════════════ */
+#report-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn .5s ease both;
+}
+@keyframes slideIn {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* FAIXA TOPO */
+.top-stripe {
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  height: 56px;
+  gap: 24px;
+  position: sticky; top: 0; z-index: 50;
+}
+.ts-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 220px;
+}
+.ts-brand {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+}
+.ts-sep { color: var(--orange); margin: 0 4px; }
+
+.ts-center {
+  flex: 1;
+  text-align: center;
+}
+.ts-projeto {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: .08em;
+  color: var(--white);
+}
+
+.ts-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 280px;
+  justify-content: flex-end;
+}
+.ts-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.ts-lbl {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.4);
+  text-transform: uppercase;
+}
+.ts-meta > span:last-child {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.btn-reset {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.7);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: .8rem;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.btn-reset:hover { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+/* GRID PRINCIPAL: 3 colunas */
+.rpt-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr 280px;
+  gap: 0;
+}
+
+/* ── COLUNA ESQUERDA (aside escura) ── */
+.col-aside {
+  background: var(--navy-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-right: 1px solid rgba(255,255,255,.06);
+}
+
+.aside-hero {
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  background: linear-gradient(180deg, var(--navy-mid) 0%, var(--navy-dark) 100%);
+}
+.ah-label {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  letter-spacing: .18em;
+  color: rgba(255,255,255,.35);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.ah-status {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: .06em;
+  color: var(--white);
+  line-height: 1.1;
+}
+.ah-status-sub {
+  font-size: .8rem;
+  color: rgba(255,255,255,.5);
+  margin-top: 6px;
+}
+
+.aside-metrics {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.am-item {}
+.am-label {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  letter-spacing: .16em;
+  color: rgba(255,255,255,.35);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.am-val {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: .04em;
+  color: var(--white);
+}
+.am-note { font-size: .72rem; color: rgba(255,255,255,.3); margin-top: 2px; }
+.am-red    { color: #ff6b5b; }
+.am-orange { color: var(--orange-lt); }
+
+.aside-efic {
+  padding: 20px 24px;
+  flex: 1;
+}
+.ae-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.ae-label {
+  font-size: .75rem;
+  color: rgba(255,255,255,.45);
+}
+.ae-val {
+  font-family: var(--font-mono);
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--white);
+}
+.ae-bar-track {
+  height: 5px;
+  background: rgba(255,255,255,.08);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.ae-bar-fill {
+  height: 100%;
+  background: var(--green-lt);
+  border-radius: 99px;
+  width: 0%;
+  transition: width 1.2s ease;
+}
+.ae-orange { background: var(--orange-lt); }
+.ae-red    { background: #ff6b5b; }
+
+/* ── COLUNA CENTRAL ── */
+.col-center {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--paper);
+}
+
+/* Bloco financeiro */
+.fin-block {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 2px solid var(--light);
+  background: var(--white);
+}
+.fin-card {
+  flex: 1;
+  padding: 24px 28px;
+  border-right: 1px solid var(--light);
+}
+.fin-card:last-child { border-right: none; }
+.fin-saldo { background: var(--paper); }
+.fin-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  font-family: var(--font-display);
+  font-size: .85rem;
+  letter-spacing: .1em;
+  color: var(--mid);
+  border-right: 1px solid var(--light);
+  background: var(--white);
+  min-width: 40px;
+}
+.fc-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  letter-spacing: .16em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.fc-val {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: .02em;
+  color: var(--navy);
+}
+.fc-orange { color: var(--orange); }
+
+/* Bloco produção */
+.prod-block {
+  flex: 1;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pb-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.pb-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: .12em;
+  color: var(--navy);
+}
+.pb-total {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  color: var(--ink-dim);
+  letter-spacing: .08em;
+}
+
+/* 4 colunas verticais tipo "tower chart" */
+.pb-cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  flex: 1;
+}
+.pb-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.pb-col-top { text-align: center; }
+.pb-pct {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+.pb-col-label {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  color: var(--ink-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+.pb-tower-wrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 100px;
+}
+.pb-tower-bg {
+  width: 36px;
+  height: 100px;
+  background: var(--light);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.pb-tower {
+  width: 100%;
+  height: 0%;
+  border-radius: 4px;
+  transition: height 1.2s cubic-bezier(.34,1.56,.64,1);
+}
+.pb-qtd {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  color: var(--ink-dim);
+  font-weight: 500;
+}
+
+/* Barra de progresso multi-segmento */
+.pb-progress-wrap {}
+.pbp-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: .75rem;
+  color: var(--ink-dim);
+  margin-bottom: 6px;
+}
+#pbp-pct { font-family: var(--font-mono); font-weight: 600; color: var(--navy); }
+.pbp-track {
+  height: 10px;
+  border-radius: 99px;
+  overflow: hidden;
+  display: flex;
+  background: var(--light);
+}
+.pbp-seg {
+  height: 100%;
+  width: 0%;
+  transition: width 1.2s ease;
+}
+.pbp-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: .72rem;
+  color: var(--ink-dim);
+  flex-wrap: wrap;
+}
+.dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* ── COLUNA DIREITA: notas ── */
+.col-right {
+  background: var(--white);
+  border-left: 2px solid var(--light);
+  display: flex;
+  flex-direction: column;
+}
+
+.nota-block {
+  flex: 1;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--light);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.nota-block:last-child { border-bottom: none; }
+
+.nb-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--light);
+}
+.nb-icon {
+  width: 22px; height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: .75rem;
+  flex-shrink: 0;
+}
+.nb-title {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.risco .nb-header { border-bottom-color: #ffdad7; }
+.risco .nb-icon    { background: #fdecea; color: var(--red); }
+.risco .nb-title   { color: var(--red); }
+
+.acao .nb-header   { border-bottom-color: #d4e7fb; }
+.acao .nb-icon     { background: #e8f2fd; color: var(--blue-mid); }
+.acao .nb-title    { color: var(--blue-mid); }
+
+.conquista .nb-header { border-bottom-color: #c9f0dc; }
+.conquista .nb-icon   { background: #e4f8ee; color: var(--green); }
+.conquista .nb-title  { color: var(--green); }
+
+.reclam .nb-header { border-bottom-color: #fde9d4; }
+.reclam .nb-icon   { background: #fef1e4; color: var(--orange); }
+.reclam .nb-title  { color: var(--orange); }
+
+.nb-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.nb-list li {
+  font-size: .8rem;
+  line-height: 1.4;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink-mid);
+}
+.nb-list li.filled  { color: var(--ink); background: var(--paper); }
+.nb-list li.empty   { color: var(--mid); font-style: italic; font-size: .75rem; }
+
+/* ── NOTAS INLINE (riscos + ações abaixo do progresso) ── */
+.notas-inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+.ni-block {
+  border-bottom: none !important;
+  border-right: none !important;
+}
+.nb-list.nb-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nb-list.nb-horizontal li {
+  font-size: .78rem;
+  padding: 5px 9px;
+}
+
+/* ── PAINEL DE ÍNDICES (col direita topo) ── */
+.col-right-indices {
+  background: var(--navy);
+  padding: 18px 20px;
+  border-bottom: 2px solid var(--orange);
+}
+.cri-title {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  letter-spacing: .18em;
+  color: rgba(255,255,255,.4);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.cri-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.cri-item:last-of-type { border-bottom: none; }
+.cri-label {
+  font-size: .78rem;
+  color: rgba(255,255,255,.5);
+}
+.cri-val {
+  font-family: var(--font-mono);
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--white);
+}
+.cri-red  { color: #ff6b5b; }
+.cri-sep  { height: 1px; background: rgba(255,255,255,.08); margin: 6px 0; }
+
+/* ── RELÓGIO no header ── */
+.ts-clock {
+  font-family: var(--font-mono);
+  font-size: .9rem;
+  font-weight: 500;
+  color: var(--orange);
+  letter-spacing: .05em;
+  line-height: 1;
+}
+.ts-clock-date {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  color: rgba(255,255,255,.4);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* FOOTER */
+.rpt-footer {
+  background: var(--navy);
+  padding: 10px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  letter-spacing: .1em;
+  color: rgba(255,255,255,.3);
+  text-transform: uppercase;
+}
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 1100px) {
+  .rpt-grid { grid-template-columns: 220px 1fr; }
+  .col-right { grid-column: 1/-1; display: grid; grid-template-columns: repeat(2,1fr); }
+  .nota-block { border-bottom: none; border-right: 1px solid var(--light); }
+}
+@media (max-width: 780px) {
+  #upload-screen { flex-direction: column; }
+  .up-sidebar { width: 100%; height: auto; padding: 32px 28px; flex-direction: row; align-items: center; }
+  .up-tagline { font-size: 2rem; }
+  .rpt-grid { grid-template-columns: 1fr; }
+  .col-aside { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .aside-hero, .aside-metrics, .aside-efic { flex: 1; min-width: 200px; }
+  .pb-cols { grid-template-columns: repeat(2,1fr); }
+  .ts-right { display: none; }
+}
+  </style>
+</head>
+<body>
+
+<!-- ══════════ UPLOAD ══════════ -->
+<div id="upload-screen">
+  <div class="up-noise"></div>
+  <div class="up-sidebar">
+    <div class="up-logo">
+      <span class="logo-sq"></span>
+      <span>ONE PAGE<br><strong>REPORT</strong></span>
+    </div>
+    <div class="up-tagline">Transforme sua<br>planilha em<br>relatório.</div>
+    <div class="up-version">v2.0 · Sofir do Brasil</div>
+  </div>
+  <div class="up-main">
+    <div class="up-card">
+      <p class="up-eyebrow">IMPORTAR DADOS</p>
+      <h2>Selecione a planilha do projeto</h2>
+      <p class="up-sub">O relatório será gerado automaticamente a partir da primeira aba da planilha.</p>
+      <div class="dropzone" id="drop-zone">
+        <input type="file" id="file-input" accept=".xlsx,.xls,.xlsm" hidden/>
+        <div class="dz-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <p class="dz-title">Arraste o arquivo aqui</p>
+        <p class="dz-hint">ou <u>clique para selecionar</u></p>
+        <p class="dz-fmt">.xlsx · .xlsm · .xls</p>
+      </div>
+      <div id="upload-error" class="up-error hidden">
+        Arquivo inválido. Use uma planilha Excel.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ RELATÓRIO ══════════ -->
+<div id="report-screen" class="hidden">
+
+  <div class="top-stripe">
+    <div class="ts-left">
+      <span class="logo-sq sm"></span>
+      <span class="ts-brand">ONE PAGE REPORT <span class="ts-sep">·</span> SOFIR DO BRASIL</span>
+    </div>
+    <div class="ts-center">
+      <span id="h-projeto" class="ts-projeto">—</span>
+    </div>
+    <div class="ts-right">
+      <div class="ts-meta"><span class="ts-lbl">Responsável</span><span id="h-responsavel">—</span></div>
+      <div class="ts-meta"><span class="ts-lbl">Setor</span><span id="h-setor">—</span></div>
+      <div class="ts-meta">
+        <div id="ts-clock" class="ts-clock">00:00:00</div>
+        <div id="ts-clock-date" class="ts-clock-date">—</div>
+      </div>
+      <button class="btn-reset" onclick="resetApp()">↩ Nova</button>
+    </div>
+  </div>
+
+  <div class="rpt-grid">
+
+    <aside class="col-aside">
+      <div class="aside-hero">
+        <div class="ah-label">STATUS DO PROJETO</div>
+        <div id="a-spi-big" class="ah-status">—</div>
+        <div id="a-cpi-big" class="ah-status-sub">—</div>
+      </div>
+      <div class="aside-metrics">
+        <div class="am-item">
+          <div class="am-label">FATURAMENTO</div>
+          <div id="a-fat" class="am-val">—</div>
+          <div id="a-fat-note" class="am-note">—</div>
+        </div>
+        <div class="am-item">
+          <div class="am-label">NÃO CONFORMIDADES</div>
+          <div id="a-nc" class="am-val am-red">—</div>
+        </div>
+        <div class="am-item">
+          <div class="am-label">PRAZO RESTANTE</div>
+          <div id="a-prazo" class="am-val am-orange">—</div>
+        </div>
+        <div class="am-item">
+          <div class="am-label">DESENHOS / DIA</div>
+          <div id="a-ddia" class="am-val">—</div>
+        </div>
+      </div>
+      <div class="aside-efic">
+        <div class="ae-row">
+          <div class="ae-label">Eficiência Ponderada</div>
+          <div id="a-efic" class="ae-val">—</div>
+        </div>
+        <div class="ae-bar-track"><div id="bar-efic" class="ae-bar-fill"></div></div>
+        <div class="ae-row" style="margin-top:16px">
+          <div class="ae-label">Efic. por Complexidade</div>
+          <div id="a-efic-cx" class="ae-val">—</div>
+        </div>
+        <div class="ae-bar-track"><div id="bar-efic-cx" class="ae-bar-fill ae-orange"></div></div>
+        <div class="ae-row" style="margin-top:16px">
+          <div class="ae-label">Índice de Retrabalho</div>
+          <div id="a-ret-cx" class="ae-val">—</div>
+        </div>
+        <div class="ae-bar-track"><div id="bar-ret-cx" class="ae-bar-fill ae-red"></div></div>
+      </div>
+    </aside>
+
+    <div class="col-center">
+      <div class="fin-block">
+        <div class="fin-card">
+          <div class="fc-eyebrow">PROPOSTA</div>
+          <div id="c-proposta" class="fc-val">—</div>
+        </div>
+        <div class="fin-divider">VS</div>
+        <div class="fin-card">
+          <div class="fc-eyebrow">CUSTO REAL</div>
+          <div id="c-custo" class="fc-val fc-orange">—</div>
+        </div>
+        <div class="fin-card fin-saldo">
+          <div class="fc-eyebrow">SALDO</div>
+          <div id="c-saldo" class="fc-val">—</div>
+        </div>
+      </div>
+
+      <div class="prod-block">
+        <div class="pb-header">
+          <span class="pb-title">PRODUÇÃO</span>
+          <span id="pb-total" class="pb-total">— itens</span>
+        </div>
+        <div class="pb-cols">
+          <div class="pb-col">
+            <div class="pb-col-top">
+              <div id="p-fin-pct" class="pb-pct" style="color:var(--green)">—</div>
+              <div class="pb-col-label">FINALIZADOS</div>
+            </div>
+            <div class="pb-tower-wrap"><div class="pb-tower-bg"><div id="tower-fin" class="pb-tower" style="background:var(--green)"></div></div></div>
+            <div id="p-fin-qtd" class="pb-qtd">—</div>
+          </div>
+          <div class="pb-col">
+            <div class="pb-col-top">
+              <div id="p-proc-pct" class="pb-pct" style="color:var(--blue-mid)">—</div>
+              <div class="pb-col-label">EM PROCESSO</div>
+            </div>
+            <div class="pb-tower-wrap"><div class="pb-tower-bg"><div id="tower-proc" class="pb-tower" style="background:var(--blue-mid)"></div></div></div>
+            <div id="p-proc-qtd" class="pb-qtd">—</div>
+          </div>
+          <div class="pb-col">
+            <div class="pb-col-top">
+              <div id="p-ni-pct" class="pb-pct" style="color:var(--mid)">—</div>
+              <div class="pb-col-label">NÃO FABRIC.</div>
+            </div>
+            <div class="pb-tower-wrap"><div class="pb-tower-bg"><div id="tower-ni" class="pb-tower" style="background:var(--mid)"></div></div></div>
+            <div id="p-ni-qtd" class="pb-qtd">—</div>
+          </div>
+          <div class="pb-col">
+            <div class="pb-col-top">
+              <div id="p-ret-pct" class="pb-pct" style="color:var(--orange)">—</div>
+              <div class="pb-col-label">RETRABALHO</div>
+            </div>
+            <div class="pb-tower-wrap"><div class="pb-tower-bg"><div id="tower-ret" class="pb-tower" style="background:var(--orange)"></div></div></div>
+            <div id="p-ret-qtd" class="pb-qtd">—</div>
+          </div>
+        </div>
+
+        <div class="pb-progress-wrap">
+          <div class="pbp-labels">
+            <span>Progresso Geral</span>
+            <span id="pbp-pct">0%</span>
+          </div>
+          <div class="pbp-track">
+            <div id="pbp-fill-fin"  class="pbp-seg" style="background:var(--green)"></div>
+            <div id="pbp-fill-proc" class="pbp-seg" style="background:var(--blue-mid)"></div>
+            <div id="pbp-fill-ni"   class="pbp-seg" style="background:var(--mid)"></div>
+            <div id="pbp-fill-ret"  class="pbp-seg" style="background:var(--orange)"></div>
+          </div>
+          <div class="pbp-legend">
+            <span><i class="dot" style="background:var(--green)"></i>Finalizado</span>
+            <span><i class="dot" style="background:var(--blue-mid)"></i>Processo</span>
+            <span><i class="dot" style="background:var(--mid)"></i>Não Fab.</span>
+            <span><i class="dot" style="background:var(--orange)"></i>Retrabalho</span>
+          </div>
+        </div>
+
+        <div class="notas-inline">
+          <div class="nota-block risco ni-block">
+            <div class="nb-header">
+              <span class="nb-icon">⚠</span>
+              <span class="nb-title">PRINCIPAIS RISCOS</span>
+            </div>
+            <ul id="lista-riscos" class="nb-list nb-horizontal"></ul>
+          </div>
+          <div class="nota-block acao ni-block">
+            <div class="nb-header">
+              <span class="nb-icon">▶</span>
+              <span class="nb-title">PLANOS DE AÇÃO</span>
+            </div>
+            <ul id="lista-acoes" class="nb-list nb-horizontal"></ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="col-right-indices">
+        <div class="cri-title">ÍNDICES DO PROJETO</div>
+        <div class="cri-item"><span class="cri-label">CPI</span><span id="cr-cpi" class="cri-val">—</span></div>
+        <div class="cri-item"><span class="cri-label">SPI</span><span id="cr-spi" class="cri-val">—</span></div>
+        <div class="cri-sep"></div>
+        <div class="cri-item"><span class="cri-label">Status Efic. Complexidade</span><span id="cr-efcx" class="cri-val">—</span></div>
+        <div class="cri-item"><span class="cri-label">Status Retrabalho</span><span id="cr-retcx" class="cri-val">—</span></div>
+        <div class="cri-sep"></div>
+        <div class="cri-item"><span class="cri-label">% Conclusão por Peso</span><span id="cr-conc-peso" class="cri-val">—</span></div>
+        <div class="cri-sep"></div>
+        <div class="cri-item"><span class="cri-label">NC Registradas</span><span id="cr-nc" class="cri-val cri-red">—</span></div>
+        <div class="cri-item"><span class="cri-label">Desenhos/Dia</span><span id="cr-ddia" class="cri-val">—</span></div>
+      </div>
+      <div class="nota-block conquista">
+        <div class="nb-header">
+          <span class="nb-icon">★</span>
+          <span class="nb-title">CONQUISTAS</span>
+        </div>
+        <ul id="lista-conquistas" class="nb-list"></ul>
+      </div>
+      <div class="nota-block reclam">
+        <div class="nb-header">
+          <span class="nb-icon">✉</span>
+          <span class="nb-title">RECLAMAÇÕES</span>
+        </div>
+        <ul id="lista-reclamacoes" class="nb-list"></ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rpt-footer">
+    <span>One Page Report · Sofir do Brasil</span>
+    <span id="v-gerado">—</span>
+  </div>
+
+</div>
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════
+   ONE PAGE REPORT v2 — app.js
+   ═══════════════════════════════════════════════════════ */
+
+const CELL = {
+  titulo:      'B2',
+  data:        'M2',
+  responsavel: 'M3',
+  setor:       'M4',
+  faturamento: 'B9',
+  nc:          'E9',
+  cpi:         'H9',
+  spi:         'K9',
+  finPct:      'B14',
+  procPct:     'E14',
+  niPct:       'H14',
+  retPct:      'K14',
+  finQtd:      'B19',
+  procQtd:     'E19',
+  niQtd:       'H19',
+  retQtd:      'K19',
+  proposta:    'B24',
+  custo:       'E24',
+  eficiencia:  'H24',
+  prazo:       'K24',
+  desenhoDia:  'B30',
+  eficCx:      'E30',
+  retCx:       'H30',
+  concPeso:    'K30',
+  statusEficCx:'E32',
+  statusRetCx: 'H32',
+  statusEfic:  'E32',
+  statusRet:   'H32',
+  riscos:      ['B37','B38','B39','B40','B41'],
+  acoes:       ['E37','E38','E39','E40','E41'],
+  conquistas:  ['H37','H38','H39','H40','H41'],
+  reclamacoes: ['K37','K38','K39','K40','K41'],
+};
+
+const uploadScreen = document.getElementById('upload-screen');
+const reportScreen = document.getElementById('report-screen');
+const dropZone     = document.getElementById('drop-zone');
+const fileInput    = document.getElementById('file-input');
+const errMsg       = document.getElementById('upload-error');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+function handleFile(file) {
+  errMsg.classList.add('hidden');
+  // Aceita por nome — não depende do MIME que o Windows às vezes não detecta
+  const nomeOk = /\.(xlsx|xls|xlsm|xlsb|xltx|xltm)$/i.test(file.name);
+  const tipoOk = file.type === '' ||
+                 file.type.includes('excel') ||
+                 file.type.includes('spreadsheet') ||
+                 file.type.includes('officedocument') ||
+                 file.type.includes('ms-excel');
+  if (!nomeOk && !tipoOk) {
+    errMsg.classList.remove('hidden');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const wb = XLSX.read(ev.target.result, { type: 'array', cellDates: true });
+      renderReport(wb.Sheets[wb.SheetNames[0]]);
+    } catch(err) {
+      console.error('Erro ao ler planilha:', err);
+      errMsg.classList.remove('hidden');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function c(ws, addr) {
+  const cell = ws[addr];
+  if (!cell) return null;
+  if (cell.t === 'd') return cell.v;
+  return cell.v ?? null;
+}
+
+function renderReport(ws) {
+
+  // Cabeçalho
+  set('h-projeto',     strip(c(ws, CELL.titulo), 'ONE PAGE REPORT -') || 'ONE PAGE REPORT');
+  set('h-responsavel', strip(c(ws, CELL.responsavel), 'Responsável:'));
+  set('h-setor',       strip(c(ws, CELL.setor), 'Setor:'));
+  iniciarRelogio();
+
+  // SPI / CPI
+  const spiTxt = String(c(ws, CELL.spi) ?? '—');
+  const cpiTxt = String(c(ws, CELL.cpi) ?? '—');
+  set('a-spi-big', spiTxt);
+  set('a-cpi-big', cpiTxt);
+
+  const heroEl = document.getElementById('a-spi-big');
+  if (heroEl) {
+    if (/atraso|acima/i.test(spiTxt)) heroEl.style.color = '#ff6b5b';
+    else if (/prazo|ok|dentro/i.test(spiTxt)) heroEl.style.color = 'var(--green-lt)';
+  }
+
+  // Painel de índices coluna direita
+  const eficCx = toNum(c(ws, CELL.eficCx));
+  const retCx  = toNum(c(ws, CELL.retCx));
+
+  // Painel de índices — status E32, H32 e K30
+  const statusEficCx = String(c(ws, CELL.statusEficCx) ?? '—');
+  const statusRetCx  = String(c(ws, CELL.statusRetCx)  ?? '—');
+  const concPeso     = c(ws, CELL.concPeso);
+
+  set('cr-cpi',        cpiTxt);
+  set('cr-spi',        spiTxt);
+  set('cr-efcx',       statusEficCx);
+  set('cr-retcx',      statusRetCx);
+  set('cr-nc',         fmtInt(c(ws, CELL.nc)));
+  set('cr-ddia',       fmtDecimal(c(ws, CELL.desenhoDia)));
+  set('cr-conc-peso',  concPeso !== null ? fmtPct(toNum(concPeso)) : '—');
+
+  // Colorir status no painel
+  const crEfcx  = document.getElementById('cr-efcx');
+  const crRetcx = document.getElementById('cr-retcx');
+  if (crEfcx  && /ruim|baixo|crítico|critico|acima/i.test(statusEficCx))  crEfcx.style.color  = '#ff6b5b';
+  else if (crEfcx  && /bom|ok|dentro|controlado/i.test(statusEficCx))     crEfcx.style.color  = 'var(--green-lt)';
+  if (crRetcx && /alto|ruim|crítico|critico/i.test(statusRetCx))          crRetcx.style.color = '#ff6b5b';
+  else if (crRetcx && /baixo|ok|controlado/i.test(statusRetCx))           crRetcx.style.color = 'var(--green-lt)';
+
+  const crCpi = document.getElementById('cr-cpi');
+  const crSpi = document.getElementById('cr-spi');
+  if (crCpi && /acima|atraso/i.test(cpiTxt)) crCpi.style.color = '#ff6b5b';
+  if (crSpi && /atraso/i.test(spiTxt))       crSpi.style.color = '#ff6b5b';
+
+  // Métricas aside
+  const fat = c(ws, CELL.faturamento);
+  if (fat !== null && fat !== '') {
+    set('a-fat', fmtMoeda(toNum(fat)));
+    set('a-fat-note', '');
+  } else {
+    set('a-fat', '—');
+    set('a-fat-note', 'Aguardando dado');
+  }
+
+  set('a-nc',    fmtInt(c(ws, CELL.nc)));
+  set('a-prazo', c(ws, CELL.prazo) ?? '—');
+  set('a-ddia',  fmtDecimal(c(ws, CELL.desenhoDia)));
+
+  // Eficiências aside
+  const efic = toNum(c(ws, CELL.eficiencia));
+  set('a-efic',    fmtPct(efic));
+  set('a-efic-cx', fmtPct(eficCx));
+  set('a-ret-cx',  fmtPct(retCx));
+
+  animWidth('bar-efic',    efic   * 100);
+  animWidth('bar-efic-cx', eficCx * 100);
+  animWidth('bar-ret-cx',  retCx  * 100);
+
+  // Financeiro
+  const proposta = toNum(c(ws, CELL.proposta));
+  const custo    = toNum(c(ws, CELL.custo));
+  const saldo    = proposta - custo;
+
+  set('c-proposta', fmtMoeda(proposta));
+  set('c-custo',    fmtMoeda(custo));
+
+  const saldoEl = document.getElementById('c-saldo');
+  if (saldoEl) {
+    saldoEl.textContent = fmtMoeda(saldo);
+    saldoEl.style.color = saldo >= 0 ? 'var(--green)' : 'var(--orange)';
+  }
+
+  // Produção
+  const finPct  = toNum(c(ws, CELL.finPct));
+  const procPct = toNum(c(ws, CELL.procPct));
+  const niPct   = toNum(c(ws, CELL.niPct));
+  const retPct  = toNum(c(ws, CELL.retPct));
+
+  const finQtd  = toNum(c(ws, CELL.finQtd));
+  const procQtd = toNum(c(ws, CELL.procQtd));
+  const niQtd   = toNum(c(ws, CELL.niQtd));
+  const retQtd  = toNum(c(ws, CELL.retQtd));
+
+  set('pb-total',   `${finQtd + procQtd + niQtd + retQtd} itens no total`);
+  set('p-fin-pct',  fmtPct(finPct));
+  set('p-proc-pct', fmtPct(procPct));
+  set('p-ni-pct',   fmtPct(niPct));
+  set('p-ret-pct',  fmtPct(retPct));
+  set('p-fin-qtd',  `${finQtd} itens`);
+  set('p-proc-qtd', `${procQtd} itens`);
+  set('p-ni-qtd',   `${niQtd} itens`);
+  set('p-ret-qtd',  `${retQtd} itens`);
+
+  animHeight('tower-fin',  finPct  * 100);
+  animHeight('tower-proc', procPct * 100);
+  animHeight('tower-ni',   niPct   * 100);
+  animHeight('tower-ret',  retPct  * 100);
+
+  set('pbp-pct', fmtPct(finPct));
+  animWidth('pbp-fill-fin',  finPct  * 100);
+  animWidth('pbp-fill-proc', procPct * 100);
+  animWidth('pbp-fill-ni',   niPct   * 100);
+  animWidth('pbp-fill-ret',  retPct  * 100);
+
+  // Notas
+  renderLista('lista-riscos',      CELL.riscos,      ws);
+  renderLista('lista-acoes',       CELL.acoes,       ws);
+  renderLista('lista-conquistas',  CELL.conquistas,  ws);
+  renderLista('lista-reclamacoes', CELL.reclamacoes, ws);
+
+  set('v-gerado', new Date().toLocaleString('pt-BR'));
+
+  uploadScreen.classList.add('hidden');
+  reportScreen.classList.remove('hidden');
+}
+
+function renderLista(id, addrs, ws) {
+  const ul = document.getElementById(id);
+  if (!ul) return;
+  ul.innerHTML = '';
+  addrs.forEach((addr, i) => {
+    const val   = c(ws, addr);
+    const isNum = val !== null && !isNaN(val) && Number(val) === (i + 1);
+    const li    = document.createElement('li');
+    if (val && !isNum && String(val).trim() !== '') {
+      li.textContent = String(val).trim();
+      li.classList.add('filled');
+    } else {
+      li.textContent = 'Não informado';
+      li.classList.add('empty');
+    }
+    ul.appendChild(li);
+  });
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = (val !== null && val !== undefined && String(val).trim() !== '') ? val : '—';
+}
+
+function animWidth(id, pct) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.style.width = clamp(pct) + '%';
+  }, 80);
+}
+
+function animHeight(id, pct) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.style.height = clamp(pct) + '%';
+  }, 80);
+}
+
+function clamp(v) { return Math.min(Math.max(v || 0, 0), 100); }
+
+function toNum(v) {
+  if (v === null || v === undefined || v === '') return 0;
+  if (typeof v === 'number') return v;
+  return parseFloat(String(v).replace(/[^\d.,\-]/g, '').replace(',', '.')) || 0;
+}
+
+function fmtMoeda(n) {
+  return Number(n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function fmtPct(n) {
+  const v = n <= 1 ? n * 100 : n;
+  return v.toFixed(1) + '%';
+}
+
+function fmtInt(v) {
+  if (v === null || v === undefined || v === '') return '—';
+  return String(Math.round(Number(v)));
+}
+
+function fmtDecimal(v) {
+  if (v === null || v === undefined || v === '') return '—';
+  return Number(v).toFixed(2);
+}
+
+function strip(str, prefix) {
+  if (!str) return '—';
+  return String(str).replace(new RegExp('^' + prefix + '\\s*', 'i'), '').trim() || '—';
+}
+
+let clockInterval = null;
+function iniciarRelogio() {
+  if (clockInterval) clearInterval(clockInterval);
+  function tick() {
+    const now  = new Date();
+    const hora = now.toLocaleTimeString('pt-BR');
+    const data = now.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+    const clk  = document.getElementById('ts-clock');
+    const dt   = document.getElementById('ts-clock-date');
+    if (clk) clk.textContent = hora;
+    if (dt)  dt.textContent  = data;
+  }
+  tick();
+  clockInterval = setInterval(tick, 1000);
+}
+
+function resetApp() {
+  fileInput.value = '';
+  errMsg.classList.add('hidden');
+  reportScreen.classList.add('hidden');
+  uploadScreen.classList.remove('hidden');
+  if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
+}
+</script>
+</body>
+</html>
