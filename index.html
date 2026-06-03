@@ -971,8 +971,10 @@ body {
         <div class="cri-item"><span class="cri-label">CPI</span><span id="cr-cpi" class="cri-val">—</span></div>
         <div class="cri-item"><span class="cri-label">SPI</span><span id="cr-spi" class="cri-val">—</span></div>
         <div class="cri-sep"></div>
-        <div class="cri-item"><span class="cri-label">Efic. Complexidade</span><span id="cr-efcx" class="cri-val">—</span></div>
-        <div class="cri-item"><span class="cri-label">Retrabalho Cx.</span><span id="cr-retcx" class="cri-val cri-red">—</span></div>
+        <div class="cri-item"><span class="cri-label">Status Efic. Complexidade</span><span id="cr-efcx" class="cri-val">—</span></div>
+        <div class="cri-item"><span class="cri-label">Status Retrabalho</span><span id="cr-retcx" class="cri-val">—</span></div>
+        <div class="cri-sep"></div>
+        <div class="cri-item"><span class="cri-label">% Conclusão por Peso</span><span id="cr-conc-peso" class="cri-val">—</span></div>
         <div class="cri-sep"></div>
         <div class="cri-item"><span class="cri-label">NC Registradas</span><span id="cr-nc" class="cri-val cri-red">—</span></div>
         <div class="cri-item"><span class="cri-label">Desenhos/Dia</span><span id="cr-ddia" class="cri-val">—</span></div>
@@ -1032,6 +1034,9 @@ const CELL = {
   desenhoDia:  'B30',
   eficCx:      'E30',
   retCx:       'H30',
+  concPeso:    'K30',
+  statusEficCx:'E32',
+  statusRetCx: 'H32',
   statusEfic:  'E32',
   statusRet:   'H32',
   riscos:      ['B37','B38','B39','B40','B41'],
@@ -1112,12 +1117,26 @@ function renderReport(ws) {
   const eficCx = toNum(c(ws, CELL.eficCx));
   const retCx  = toNum(c(ws, CELL.retCx));
 
-  set('cr-cpi',   cpiTxt);
-  set('cr-spi',   spiTxt);
-  set('cr-efcx',  fmtPct(eficCx));
-  set('cr-retcx', fmtPct(retCx));
-  set('cr-nc',    fmtInt(c(ws, CELL.nc)));
-  set('cr-ddia',  fmtDecimal(c(ws, CELL.desenhoDia)));
+  // Painel de índices — status E32, H32 e K30
+  const statusEficCx = String(c(ws, CELL.statusEficCx) ?? '—');
+  const statusRetCx  = String(c(ws, CELL.statusRetCx)  ?? '—');
+  const concPeso     = c(ws, CELL.concPeso);
+
+  set('cr-cpi',        cpiTxt);
+  set('cr-spi',        spiTxt);
+  set('cr-efcx',       statusEficCx);
+  set('cr-retcx',      statusRetCx);
+  set('cr-nc',         fmtInt(c(ws, CELL.nc)));
+  set('cr-ddia',       fmtDecimal(c(ws, CELL.desenhoDia)));
+  set('cr-conc-peso',  concPeso !== null ? fmtPct(toNum(concPeso)) : '—');
+
+  // Colorir status no painel
+  const crEfcx  = document.getElementById('cr-efcx');
+  const crRetcx = document.getElementById('cr-retcx');
+  if (crEfcx  && /ruim|baixo|crítico|critico|acima/i.test(statusEficCx))  crEfcx.style.color  = '#ff6b5b';
+  else if (crEfcx  && /bom|ok|dentro|controlado/i.test(statusEficCx))     crEfcx.style.color  = 'var(--green-lt)';
+  if (crRetcx && /alto|ruim|crítico|critico/i.test(statusRetCx))          crRetcx.style.color = '#ff6b5b';
+  else if (crRetcx && /baixo|ok|controlado/i.test(statusRetCx))           crRetcx.style.color = 'var(--green-lt)';
 
   const crCpi = document.getElementById('cr-cpi');
   const crSpi = document.getElementById('cr-spi');
